@@ -16,32 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 3000, host: 3000
   config.vm.network :forwarded_port, guest: 5432, host: 5432
 
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
+  config.vm.provision "shell", path: "provision.sh"
+  config.vm.provision "shell", path: "ruby.sh"
 
-    chef.add_recipe "apt"
-    chef.add_recipe "vim"
-    chef.add_recipe "nodejs"
-    chef.add_recipe "ruby_build"
-    chef.add_recipe "rbenv::user"
-    chef.add_recipe "rbenv::vagrant"
-    chef.add_recipe "sqlite"
-    chef.add_recipe "postgresql"
-    chef.add_recipe "heroku-toolbelt"
-
-    chef.json = {
-      rbenv: {
-        user_installs: [{
-          user: 'vagrant',
-          rubies: ["2.2.1"],
-          global: "2.2.1",
-          gems: {
-            "2.2.1" => [
-              { name: "bundler" }
-            ]
-          }
-        }]
-      }
-    }
-  end
 end
