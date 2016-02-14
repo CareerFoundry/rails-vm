@@ -10,8 +10,6 @@ Make sure [VirtualBox](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](
 
 ### Install necessary Vagrant plugins from your Windows prompt
     vagrant plugin install vagrant-vbguest
-    vagrant plugin install vagrant-librarian-chef-nochef
-    vagrant plugin install vagrant-multi-putty
 
 ### Change directory to your Rails project folder from Windows command line
 This goes for wherever your project folder is:
@@ -20,7 +18,8 @@ This goes for wherever your project folder is:
 
 ### Copy files from this repo into your Rails project folder
     Vagrantfile
-    Cheffile
+    provision.sh
+    ruby.sh
 
 These contain a pre-made configuration for the Virtual Machine we're about to build. They will direct Vagrant to install all the necessary software for developing your Rails app.
 
@@ -31,7 +30,6 @@ If you haven't done so already, initialize your project folder as a Git reposito
 Open up your .gitignore file in the root of your project folder and add these lines:
 
     .vagrant
-    cookbooks/
 
 Save the file and then commit. This step is very important. Without doing this, you'll likely end up with a huge (5 GB or so) Virtual Machine file checked into your Git repo, which GitHub will reject for being too large on your next push.
 
@@ -56,12 +54,10 @@ The /vagrant folder is created by default to point to your Rails project folder 
 
 ### Start Rails server inside VM
     bundle
-    rbenv rehash
     rails s -b 0.0.0.0
 
 What we just did here:
   - `bundle` installs the gems in your Gemfile on the virtual machine, including Rails itself.
-  - `rbenv rehash` will reload the ruby environment so certain executables can be found (the `rails` command etc.). If you try to run `rails s` before doing this, you will get an error, with a message to install rails from a package. You don't need to do this! Bundle should have already installed it. Just run the above commands in order.
   - `rails s` is the standard shorthand command to start the rails server. The `-b` flag will bind the rails server to the 0.0.0.0 IP address  within the virtual machine. This is necessary because by default the rails server binds to 127.0.0.1 (a.k.a. localhost), but that IP address is only accessible directly on the machine where the server is running. 0.0.0.0 is publicly accessible and will allow you to view the app from localhost:3000 in your browser on your host machine ("host machine" = your Windows machine).
 
 Now, inside a browser in Windows, go to http://localhost:3000, and you should see a webpage served up from your Rails app!
